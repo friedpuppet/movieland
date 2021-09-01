@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="ua.yelisieiev">
+        <context:exclude-filter type="regex" expression="com\.yelisieiev\.web\.controller\..*"/>
+    </context:component-scan>
+
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="location">
+            <value>classpath:/application.properties</value>
+        </property>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="dataSource" class="org.postgresql.ds.PGSimpleDataSource">
+        <property name="serverNames" value="${jdbc.server.name}"/>
+        <property name="portNumbers" value="${jdbc.server.port}"/>
+        <property name="databaseName" value="${jdbc.database.name}"/>
+        <property name="user" value="${jdbc.user.name}"/>
+        <property name="password" value="${jdbc.user.password}"/>
+    </bean>
+</beans>
