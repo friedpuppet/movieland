@@ -3,52 +3,29 @@ package ua.yelisieiev.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ua.yelisieiev.common.MockMoviesFactory;
 import ua.yelisieiev.dao.jdbc.JdbcMovieDao;
 import ua.yelisieiev.entity.Movie;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class MovieServiceTest {
-    private Movie shawshankRedemption;
-    private Movie greenMile;
-    private Movie forrestGump;
-    private Movie inception;
+    private final Movie shawshankRedemption = MockMoviesFactory.getshawshankRedemption();
+    private final Movie greenMile = MockMoviesFactory.getGreenMile();
+    private final Movie forrestGump = MockMoviesFactory.getForrestGump();
+    private final Movie inception = MockMoviesFactory.getInception();
 
     private MovieService movieService;
     private JdbcMovieDao jdbcMovieDao;
 
     @BeforeEach
     void setUp() {
-        shawshankRedemption = Movie.builder()
-                .id(1)
-                .nameNative("The Shawshank Redemption")
-                .nameRussian("Побег из Шоушенка")
-                .yearOfRelease(LocalDate.of(1994, 01, 01))
-                .build();
-        greenMile = Movie.builder()
-                .id(2)
-                .nameNative("The Green Mile")
-                .nameRussian("Зеленая миля")
-                .yearOfRelease(LocalDate.of(1999, 01, 01))
-                .build();
-        forrestGump = Movie.builder()
-                .id(3)
-                .nameNative("Forrest Gump")
-                .nameRussian("Форрест Гамп")
-                .yearOfRelease(LocalDate.of(1994, 01, 01))
-                .build();
-        inception = Movie.builder()
-                .id(6)
-                .nameNative("Inception")
-                .nameRussian("Начало")
-                .yearOfRelease(LocalDate.of(2010, 01, 01))
-                .build();
         jdbcMovieDao = mock(JdbcMovieDao.class);
         movieService = new DefaultMovieService(jdbcMovieDao);
     }

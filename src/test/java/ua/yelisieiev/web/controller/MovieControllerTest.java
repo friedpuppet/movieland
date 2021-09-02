@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.yelisieiev.common.MockMoviesFactory;
 import ua.yelisieiev.entity.Movie;
 import ua.yelisieiev.service.DefaultMovieService;
 import ua.yelisieiev.service.MovieService;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -19,45 +19,21 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class MovieControllerTest {
 
     private MockMvc mockMvc;
-    private Movie shawshankRedemption;
-    private Movie greenMile;
-    private Movie forrestGump;
-    private Movie inception;
+    private final Movie shawshankRedemption = MockMoviesFactory.getshawshankRedemption();
+    private final Movie greenMile = MockMoviesFactory.getGreenMile();
+    private final Movie forrestGump = MockMoviesFactory.getForrestGump();
+    private final Movie inception = MockMoviesFactory.getInception();
 
     private MovieService movieService;
 
     @BeforeEach
     void setUp() {
-        shawshankRedemption = Movie.builder()
-                .id(1)
-                .nameNative("The Shawshank Redemption")
-                .nameRussian("Побег из Шоушенка")
-                .yearOfRelease(LocalDate.of(1994, 01, 01))
-                .build();
-        greenMile = Movie.builder()
-                .id(2)
-                .nameNative("The Green Mile")
-                .nameRussian("Зеленая миля")
-                .yearOfRelease(LocalDate.of(1999, 01, 01))
-                .build();
-        forrestGump = Movie.builder()
-                .id(3)
-                .nameNative("Forrest Gump")
-                .nameRussian("Форрест Гамп")
-                .yearOfRelease(LocalDate.of(1994, 01, 01))
-                .build();
-        inception = Movie.builder()
-                .id(6)
-                .nameNative("Inception")
-                .nameRussian("Начало")
-                .yearOfRelease(LocalDate.of(2010, 01, 01))
-                .build();
-
         movieService = mock(DefaultMovieService.class);
 
         mockMvc = MockMvcBuilders.standaloneSetup(new MovieController(movieService))

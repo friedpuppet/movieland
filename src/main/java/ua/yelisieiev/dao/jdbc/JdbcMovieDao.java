@@ -2,7 +2,6 @@ package ua.yelisieiev.dao.jdbc;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.yelisieiev.dao.MovieDao;
 import ua.yelisieiev.entity.Movie;
@@ -14,11 +13,9 @@ import java.util.List;
 public class JdbcMovieDao implements MovieDao {
     private static final RowMapper<Movie> MOVIE_ROW_MAPPER = new RowMovieMapper();
     private final JdbcTemplate jdbcTemplate;
-    private final NamedParameterJdbcTemplate parameterJdbcTemplate;
 
     public JdbcMovieDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        parameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     @Override
