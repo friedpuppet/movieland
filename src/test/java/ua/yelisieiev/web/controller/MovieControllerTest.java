@@ -11,18 +11,24 @@ import ua.yelisieiev.service.DefaultMovieService;
 import ua.yelisieiev.service.MovieService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-class MoviesControllerTest {
+class MovieControllerTest {
 
     private MockMvc mockMvc;
     private Movie shawshankRedemption;
     private Movie greenMile;
+    private Movie forrestGump;
+    private Movie inception;
+
     private MovieService movieService;
 
     @BeforeEach
@@ -39,10 +45,22 @@ class MoviesControllerTest {
                 .nameRussian("Зеленая миля")
                 .yearOfRelease(LocalDate.of(1999, 01, 01))
                 .build();
+        forrestGump = Movie.builder()
+                .id(3)
+                .nameNative("Forrest Gump")
+                .nameRussian("Форрест Гамп")
+                .yearOfRelease(LocalDate.of(1994, 01, 01))
+                .build();
+        inception = Movie.builder()
+                .id(6)
+                .nameNative("Inception")
+                .nameRussian("Начало")
+                .yearOfRelease(LocalDate.of(2010, 01, 01))
+                .build();
 
         movieService = mock(DefaultMovieService.class);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(new MoviesController(movieService))
+        mockMvc = MockMvcBuilders.standaloneSetup(new MovieController(movieService))
                 .build();
     }
 
@@ -52,7 +70,7 @@ class MoviesControllerTest {
         List<Movie> movies = List.of(shawshankRedemption, greenMile);
         when(movieService.getAll()).thenReturn(movies);
 
-        mockMvc.perform(get("/movie/all")
+        mockMvc.perform(get("/movie")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -69,6 +87,25 @@ class MoviesControllerTest {
                 .andExpect(jsonPath("$[1].yearOfRelease").value("1999"));
 
         verify(movieService, times(1)).getAll();
+        verifyNoMoreInteractions(movieService);
+    }
+
+    @DisplayName("With test data - request three random movies - get the list")
+    @Test
+    void test_getThreeRandomMovies() throws Exception {
+        List<Movie> movies = new ArrayList<>(List.of(shawshankRedemption, greenMile, forrestGump, inception));
+        movies.remove(new Random(System.nanoTime()).nextInt(3));
+        when(movieService.getRandomMovies(3)).thenReturn(movies);
+
+        mockMvc.perform(get("/movie/random")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect((jsonPath("$", hasSize(3))))
+                .andExpect(jsonPath("$[0]", notNullValue()))
+                .andExpect(jsonPath("$[1]", notNullValue()))
+                .andExpect(jsonPath("$[2]", notNullValue()));
+
+        verify(movieService, times(1)).getRandomMovies(3);
         verifyNoMoreInteractions(movieService);
     }
 }
