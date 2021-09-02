@@ -3,27 +3,20 @@ package ua.yelisieiev.web.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.yelisieiev.entity.Movie;
+import ua.yelisieiev.service.DefaultMovieService;
 import ua.yelisieiev.service.MovieService;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 class MoviesControllerTest {
 
@@ -36,18 +29,18 @@ class MoviesControllerTest {
     void setUp() {
         shawshankRedemption = Movie.builder()
                 .id(1)
-                .name_native("The Shawshank Redemption")
-                .name_russian("Побег из Шоушенка")
-                .year_of_release(LocalDate.of(1994, 01, 01))
+                .nameNative("The Shawshank Redemption")
+                .nameRussian("Побег из Шоушенка")
+                .yearOfRelease(LocalDate.of(1994, 01, 01))
                 .build();
         greenMile = Movie.builder()
                 .id(2)
-                .name_native("The Green Mile")
-                .name_russian("Зеленая миля")
-                .year_of_release(LocalDate.of(1999, 01, 01))
+                .nameNative("The Green Mile")
+                .nameRussian("Зеленая миля")
+                .yearOfRelease(LocalDate.of(1999, 01, 01))
                 .build();
 
-        movieService = mock(MovieService.class);
+        movieService = mock(DefaultMovieService.class);
 
         mockMvc = MockMvcBuilders.standaloneSetup(new MoviesController(movieService))
                 .build();
@@ -66,14 +59,14 @@ class MoviesControllerTest {
 
                 // todo the order??
                 .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].name_native").value("The Shawshank Redemption"))
-                .andExpect(jsonPath("$[0].name_russian").value("Побег из Шоушенка"))
-                .andExpect(jsonPath("$[0].year_of_release").value("1994-01-01"))
+                .andExpect(jsonPath("$[0].nameNative").value("The Shawshank Redemption"))
+                .andExpect(jsonPath("$[0].nameRussian").value("Побег из Шоушенка"))
+                .andExpect(jsonPath("$[0].yearOfRelease").value("1994"))
 
                 .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name_native").value("The Green Mile"))
-                .andExpect(jsonPath("$[1].name_russian").value("Зеленая миля"))
-                .andExpect(jsonPath("$[1].year_of_release").value("1999-01-01"));
+                .andExpect(jsonPath("$[1].nameNative").value("The Green Mile"))
+                .andExpect(jsonPath("$[1].nameRussian").value("Зеленая миля"))
+                .andExpect(jsonPath("$[1].yearOfRelease").value("1999"));
 
         verify(movieService, times(1)).getAll();
         verifyNoMoreInteractions(movieService);

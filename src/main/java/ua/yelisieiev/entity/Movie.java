@@ -1,5 +1,6 @@
 package ua.yelisieiev.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,12 +14,11 @@ import java.time.LocalDate;
 @Builder
 public class Movie {
     private int id;
-    private String name_russian;
-    private String name_native;
-    private LocalDate year_of_release;
-    private String description;
+    private String nameRussian;
+    private String nameNative;
+    @JsonFormat(pattern = "yyyy")
+    private LocalDate yearOfRelease;
     private double rating;
     private double price;
-    private String picture_path;
-    private int votes;
+    private String picturePath;
 }

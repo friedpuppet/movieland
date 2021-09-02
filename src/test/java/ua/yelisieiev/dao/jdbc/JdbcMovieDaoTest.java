@@ -1,10 +1,9 @@
-package ua.yelisieiev.dao;
+package ua.yelisieiev.dao.jdbc;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import ua.yelisieiev.entity.Movie;
 
@@ -27,15 +26,15 @@ class JdbcMovieDaoTest {
     void setUp() {
         shawshankRedemption = Movie.builder()
                 .id(1)
-                .name_native("The Shawshank Redemption")
-                .name_russian("Побег из Шоушенка")
-                .year_of_release(LocalDate.of(1994, 01, 01))
+                .nameNative("The Shawshank Redemption")
+                .nameRussian("Побег из Шоушенка")
+                .yearOfRelease(LocalDate.of(1994, 01, 01))
                 .build();
         greenMile = Movie.builder()
                 .id(2)
-                .name_native("The Green Mile")
-                .name_russian("Зеленая миля")
-                .year_of_release(LocalDate.of(1999, 01, 01))
+                .nameNative("The Green Mile")
+                .nameRussian("Зеленая миля")
+                .yearOfRelease(LocalDate.of(1999, 01, 01))
                 .build();
 
         jdbcTemplate = mock(JdbcTemplate.class);

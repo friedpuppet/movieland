@@ -1,0 +1,1 @@
+web: java -cp ~/config -jar target/dependency/webapp-runner.jar target/*.war

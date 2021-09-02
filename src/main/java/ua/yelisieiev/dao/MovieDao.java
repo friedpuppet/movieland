@@ -1,9 +1,9 @@
-package ua.yelisieiev.service;
+package ua.yelisieiev.dao;
 
 import ua.yelisieiev.entity.Movie;
 
 import java.util.List;
 
-public interface MovieService {
+public interface MovieDao {
     List<Movie> getAll();
 }
