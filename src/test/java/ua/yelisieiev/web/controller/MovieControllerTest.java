@@ -8,7 +8,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.yelisieiev.common.MockMoviesFactory;
 import ua.yelisieiev.entity.Movie;
-import ua.yelisieiev.service.DefaultMovieService;
 import ua.yelisieiev.service.MovieService;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ class MovieControllerTest {
 
     @BeforeEach
     void setUp() {
-        movieService = mock(DefaultMovieService.class);
+        movieService = mock(MovieService.class);
 
         mockMvc = MockMvcBuilders.standaloneSetup(new MovieController(movieService))
                 .build();
@@ -51,7 +50,6 @@ class MovieControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
 
-                // todo the order??
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].nameNative").value("The Shawshank Redemption"))
                 .andExpect(jsonPath("$[0].nameRussian").value("Побег из Шоушенка"))
