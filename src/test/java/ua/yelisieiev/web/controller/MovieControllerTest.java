@@ -6,43 +6,37 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.yelisieiev.common.MockMoviesFactory;
 import ua.yelisieiev.entity.Movie;
 import ua.yelisieiev.service.DefaultMovieService;
 import ua.yelisieiev.service.MovieService;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class MoviesControllerTest {
+class MovieControllerTest {
 
     private MockMvc mockMvc;
-    private Movie shawshankRedemption;
-    private Movie greenMile;
+    private final Movie shawshankRedemption = MockMoviesFactory.getshawshankRedemption();
+    private final Movie greenMile = MockMoviesFactory.getGreenMile();
+    private final Movie forrestGump = MockMoviesFactory.getForrestGump();
+    private final Movie inception = MockMoviesFactory.getInception();
+
     private MovieService movieService;
 
     @BeforeEach
     void setUp() {
-        shawshankRedemption = Movie.builder()
-                .id(1)
-                .nameNative("The Shawshank Redemption")
-                .nameRussian("Побег из Шоушенка")
-                .yearOfRelease(LocalDate.of(1994, 01, 01))
-                .build();
-        greenMile = Movie.builder()
-                .id(2)
-                .nameNative("The Green Mile")
-                .nameRussian("Зеленая миля")
-                .yearOfRelease(LocalDate.of(1999, 01, 01))
-                .build();
-
         movieService = mock(DefaultMovieService.class);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(new MoviesController(movieService))
+        mockMvc = MockMvcBuilders.standaloneSetup(new MovieController(movieService))
                 .build();
     }
 
@@ -52,7 +46,7 @@ class MoviesControllerTest {
         List<Movie> movies = List.of(shawshankRedemption, greenMile);
         when(movieService.getAll()).thenReturn(movies);
 
-        mockMvc.perform(get("/movie/all")
+        mockMvc.perform(get("/movie")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -69,6 +63,25 @@ class MoviesControllerTest {
                 .andExpect(jsonPath("$[1].yearOfRelease").value("1999"));
 
         verify(movieService, times(1)).getAll();
+        verifyNoMoreInteractions(movieService);
+    }
+
+    @DisplayName("With test data - request three random movies - get the list")
+    @Test
+    void test_getThreeRandomMovies() throws Exception {
+        List<Movie> movies = new ArrayList<>(List.of(shawshankRedemption, greenMile, forrestGump, inception));
+        movies.remove(new Random(System.nanoTime()).nextInt(3));
+        when(movieService.getRandomMovies(3)).thenReturn(movies);
+
+        mockMvc.perform(get("/movie/random")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect((jsonPath("$", hasSize(3))))
+                .andExpect(jsonPath("$[0]", notNullValue()))
+                .andExpect(jsonPath("$[1]", notNullValue()))
+                .andExpect(jsonPath("$[2]", notNullValue()));
+
+        verify(movieService, times(1)).getRandomMovies(3);
         verifyNoMoreInteractions(movieService);
     }
 }

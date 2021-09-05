@@ -13,20 +13,20 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/movie")
-public class MoviesController {
+public class MovieController {
     private final MovieService movieService;
-//    private final Gson gson;
 
-    public MoviesController(MovieService movieService) {
+    public MovieController(MovieService movieService) {
         this.movieService = movieService;
-//        gson = new GsonBuilder()
-//                .setPrettyPrinting()
-//                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-//                .create();
     }
 
-    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Movie> getAll() {
         return movieService.getAll();
+    }
+
+    @GetMapping(value = "/random", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Movie> getThreeRandoms() {
+        return movieService.getRandomMovies(3);
     }
 }
