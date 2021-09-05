@@ -49,14 +49,14 @@ class JdbcMovieDaoTest {
     @Test
     @SuppressWarnings("unchecked")
     void test_GetRandoms() {
-        when(jdbcTemplate.query(anyString(), any(), any(), any(RowMapper.class))).
+        when(jdbcTemplate.query(anyString(), any(RowMapper.class), any())).
                 thenReturn(List.of(shawshankRedemption, greenMile, inception));
 
         List<Movie> movieList = jdbcMovieDao.getRandoms(3);
 
         assertEquals(3, movieList.size());
 
-        verify(jdbcTemplate, times(1)).query(anyString(), any(), any(), any(RowMapper.class));
+        verify(jdbcTemplate, times(1)).query(anyString(), any(RowMapper.class), any());
         verifyNoMoreInteractions(jdbcTemplate);
     }
 }
