@@ -82,4 +82,29 @@ class MovieControllerTest {
         verify(movieService, times(1)).getRandomMovies(3);
         verifyNoMoreInteractions(movieService);
     }
+
+    @DisplayName("With mocked service - request movies for a particular genre - get the list")
+    @Test
+    void test_getMoviesByGenre() throws Exception {
+        List<Movie> movies = new ArrayList<>(List.of(shawshankRedemption, greenMile));
+        when(movieService.getMoviesByGenre(2)).thenReturn(movies);
+
+        mockMvc.perform(get("/movie/genre/2")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect((jsonPath("$", hasSize(2))))
+
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].nameNative").value("The Shawshank Redemption"))
+                .andExpect(jsonPath("$[0].nameRussian").value("Побег из Шоушенка"))
+                .andExpect(jsonPath("$[0].yearOfRelease").value("1994"))
+
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].nameNative").value("The Green Mile"))
+                .andExpect(jsonPath("$[1].nameRussian").value("Зеленая миля"))
+                .andExpect(jsonPath("$[1].yearOfRelease").value("1999"));
+
+        verify(movieService, times(1)).getMoviesByGenre(2);
+        verifyNoMoreInteractions(movieService);
+    }
 }

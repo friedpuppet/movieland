@@ -59,4 +59,19 @@ class JdbcMovieDaoTest {
         verify(jdbcTemplate, times(1)).query(anyString(), any(RowMapper.class), any());
         verifyNoMoreInteractions(jdbcTemplate);
     }
+
+    @DisplayName("Get movies for a genre")
+    @Test
+    @SuppressWarnings("unchecked")
+    void test_GetByGenre() {
+        when(jdbcTemplate.query(anyString(), any(RowMapper.class), any())).
+                thenReturn(List.of(shawshankRedemption, greenMile));
+
+        List<Movie> movieList = jdbcMovieDao.getMoviesByGenre(2);
+
+        assertEquals(2, movieList.size());
+
+        verify(jdbcTemplate, times(1)).query(anyString(), any(RowMapper.class), any());
+        verifyNoMoreInteractions(jdbcTemplate);
+    }
 }

@@ -33,10 +33,23 @@ public class JdbcMovieDao implements MovieDao {
         //  could implement sequential single-row queries for that case
         return jdbcTemplate.query(
                 "SELECT id, name_russian, name_native, year_of_release, rating, price, picture_path " +
-                        "from movieland.movie " +
-                        "order by random() " +
-                        "limit ?",
+                        "FROM movieland.movie " +
+                        "ORDER BY random() " +
+                        "LIMIT ?",
                 MOVIE_ROW_MAPPER,
                 count);
+    }
+
+    @Override
+    public List<Movie> getMoviesByGenre(int genreId) {
+        log.info("Get movies for genre {} request received", genreId);
+        return jdbcTemplate.query(
+                "SELECT id, name_russian, name_native, year_of_release, rating, price, picture_path " +
+                        "FROM movieland.movie m JOIN " +
+                        "movieland.movie_genre mg ON " +
+                        "m.id = mg.movie_id " +
+                        "WHERE mg.genre_id = ?",
+                MOVIE_ROW_MAPPER,
+                genreId);
     }
 }

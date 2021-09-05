@@ -58,4 +58,17 @@ class MovieServiceTest {
         verify(movieDao, times(1)).getRandoms(3);
         verifyNoMoreInteractions(movieDao);
     }
+
+    @DisplayName("With mocked dao - request movies for a particular genre - get the list")
+    @Test
+    void test_getMoviesByGenre() {
+        List<Movie> movies = new ArrayList<>(List.of(shawshankRedemption, greenMile));
+        when(movieDao.getMoviesByGenre(2)).thenReturn(movies);
+
+        List<Movie> movieList = movieService.getMoviesByGenre(2);
+        assertEquals(2, movieList.size());
+
+        verify(movieDao, times(1)).getMoviesByGenre(2);
+        verifyNoMoreInteractions(movieDao);
+    }
 }
