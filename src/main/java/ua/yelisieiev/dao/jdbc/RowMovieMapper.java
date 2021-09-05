@@ -1,8 +1,7 @@
 package ua.yelisieiev.dao.jdbc;
 
-import ua.yelisieiev.entity.Movie;
-
 import org.springframework.jdbc.core.RowMapper;
+import ua.yelisieiev.entity.Movie;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
