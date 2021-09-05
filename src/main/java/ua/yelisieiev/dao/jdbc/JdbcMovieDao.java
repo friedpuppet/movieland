@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import ua.yelisieiev.dao.MovieDao;
 import ua.yelisieiev.entity.Movie;
 
-import java.sql.Types;
 import java.util.List;
 
 @Repository
@@ -35,7 +34,7 @@ public class JdbcMovieDao implements MovieDao {
                         "from movieland.movie " +
                         "order by random() " +
                         "limit ?",
-                new Object[]{count}, new int[]{Types.INTEGER},
-                MOVIE_ROW_MAPPER);
+                MOVIE_ROW_MAPPER,
+                count);
     }
 }
