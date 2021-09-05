@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ua.yelisieiev.entity.Movie;
@@ -28,6 +29,12 @@ public class MovieController {
     public List<Movie> getThreeRandoms() {
         log.info("Get three random movies request received");
         return movieService.getRandomMovies(3);
+    }
+
+    @GetMapping(value = "/genre/{genreId}")
+    public List<Movie> getmoviesByGenre(@PathVariable int genreId) {
+        log.info("Get three random movies request received");
+        return movieService.getMoviesByGenre(genreId);
     }
 }
 
