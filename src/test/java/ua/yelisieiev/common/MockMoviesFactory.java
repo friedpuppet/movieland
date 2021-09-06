@@ -41,5 +41,14 @@ public class MockMoviesFactory {
                 .build();
     }
 
+    public static Movie getSnatch() {
+        return Movie.builder()
+                .id(16)
+                .nameNative("Snatch")
+                .nameRussian("Большой куш")
+                .yearOfRelease(LocalDate.of(2000, 1, 1))
+                .build();
+    }
+
 
 }

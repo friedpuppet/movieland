@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-class GenreServiceTest {
+class DefaultGenreServiceTest {
     private DefaultGenreService genreService;
     private GenreDao genreDao;
     private List<Genre> allGenres;

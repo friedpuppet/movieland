@@ -21,6 +21,11 @@ public class DefaultMovieService implements MovieService {
     }
 
     @Override
+    public List<Movie> getAllSorted(String sortedAttribute, String sortingType) {
+        return movieDao.getAllSorted(sortedAttribute, sortingType);
+    }
+
+    @Override
     public List<Movie> getRandomMovies(int count) {
         log.info("Get {} random movies request received", count);
         return movieDao.getRandoms(count);
@@ -30,5 +35,10 @@ public class DefaultMovieService implements MovieService {
     public List<Movie> getMoviesByGenre(int genreId) {
         log.info("Get movies for genre {} request received", genreId);
         return movieDao.getMoviesByGenre(genreId);
+    }
+
+    @Override
+    public List<Movie> getMoviesByGenreSorted(int genreId, String sortedAttribute, String sortingType) {
+        return movieDao.getMoviesByGenreSorted(genreId, sortedAttribute, sortingType);
     }
 }
