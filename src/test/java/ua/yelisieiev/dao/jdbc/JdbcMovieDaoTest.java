@@ -45,6 +45,54 @@ class JdbcMovieDaoTest {
         verifyNoMoreInteractions(jdbcTemplate);
     }
 
+    @DisplayName("On mocked jdbc - get all movies sorted by rating desc")
+    @Test
+    @SuppressWarnings("unchecked")
+    void test_GetAllSortedByRatingDesc() {
+        when(jdbcTemplate.query(anyString(), any(RowMapper.class))).thenReturn(List.of(shawshankRedemption, greenMile));
+
+        List<Movie> movieList = jdbcMovieDao.getAllSorted("rating", "desc");
+
+        assertEquals(2, movieList.size());
+        assertTrue(movieList.contains(shawshankRedemption));
+        assertTrue(movieList.contains(greenMile));
+
+        verify(jdbcTemplate, times(1)).query(anyString(), any(RowMapper.class));
+        verifyNoMoreInteractions(jdbcTemplate);
+    }
+
+    @DisplayName("On mocked jdbc - get all movies sorted by price desc")
+    @Test
+    @SuppressWarnings("unchecked")
+    void test_GetAllSortedByPriceDesc() {
+        when(jdbcTemplate.query(anyString(), any(RowMapper.class))).thenReturn(List.of(shawshankRedemption, greenMile));
+
+        List<Movie> movieList = jdbcMovieDao.getAllSorted("price", "desc");
+
+        assertEquals(2, movieList.size());
+        assertTrue(movieList.contains(shawshankRedemption));
+        assertTrue(movieList.contains(greenMile));
+
+        verify(jdbcTemplate, times(1)).query(anyString(), any(RowMapper.class));
+        verifyNoMoreInteractions(jdbcTemplate);
+    }
+
+    @DisplayName("On mocked jdbc - get all movies sorted by price asc")
+    @Test
+    @SuppressWarnings("unchecked")
+    void test_GetAllSortedByPriceAsc() {
+        when(jdbcTemplate.query(anyString(), any(RowMapper.class))).thenReturn(List.of(shawshankRedemption, greenMile));
+
+        List<Movie> movieList = jdbcMovieDao.getAllSorted("price", "asc");
+
+        assertEquals(2, movieList.size());
+        assertTrue(movieList.contains(shawshankRedemption));
+        assertTrue(movieList.contains(greenMile));
+
+        verify(jdbcTemplate, times(1)).query(anyString(), any(RowMapper.class));
+        verifyNoMoreInteractions(jdbcTemplate);
+    }
+
     @DisplayName("Get random movies")
     @Test
     @SuppressWarnings("unchecked")
@@ -74,4 +122,50 @@ class JdbcMovieDaoTest {
         verify(jdbcTemplate, times(1)).query(anyString(), any(RowMapper.class), any());
         verifyNoMoreInteractions(jdbcTemplate);
     }
+
+    @DisplayName("On mocked jdbc - get movies for a genre sorted by rating desc")
+    @Test
+    @SuppressWarnings("unchecked")
+    void test_GetByGenreSortedByRatingDesc() {
+        when(jdbcTemplate.query(anyString(), any(RowMapper.class), any())).
+                thenReturn(List.of(shawshankRedemption, greenMile));
+
+        List<Movie> movieList = jdbcMovieDao.getMoviesByGenreSorted(2, "rating", "desc");
+
+        assertEquals(2, movieList.size());
+
+        verify(jdbcTemplate, times(1)).query(anyString(), any(RowMapper.class), any());
+        verifyNoMoreInteractions(jdbcTemplate);
+    }
+
+    @DisplayName("On mocked jdbc - get movies for a genre sorted by price desc")
+    @Test
+    @SuppressWarnings("unchecked")
+    void test_GetByGenreSortedByPriceDesc() {
+        when(jdbcTemplate.query(anyString(), any(RowMapper.class), any())).
+                thenReturn(List.of(shawshankRedemption, greenMile));
+
+        List<Movie> movieList = jdbcMovieDao.getMoviesByGenreSorted(2, "price", "desc");
+
+        assertEquals(2, movieList.size());
+
+        verify(jdbcTemplate, times(1)).query(anyString(), any(RowMapper.class), any());
+        verifyNoMoreInteractions(jdbcTemplate);
+    }
+
+    @DisplayName("On mocked jdbc - get movies for a genre sorted by price asc")
+    @Test
+    @SuppressWarnings("unchecked")
+    void test_GetByGenreSortedByPriceAsc() {
+        when(jdbcTemplate.query(anyString(), any(RowMapper.class), any())).
+                thenReturn(List.of(shawshankRedemption, greenMile));
+
+        List<Movie> movieList = jdbcMovieDao.getMoviesByGenreSorted(2, "price", "asc");
+
+        assertEquals(2, movieList.size());
+
+        verify(jdbcTemplate, times(1)).query(anyString(), any(RowMapper.class), any());
+        verifyNoMoreInteractions(jdbcTemplate);
+    }
+
 }

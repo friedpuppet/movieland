@@ -27,6 +27,16 @@ public class JdbcMovieDao implements MovieDao {
     }
 
     @Override
+    public List<Movie> getAllSorted(String sortedAttribute, String sortingType) {
+        log.info("Get all movies sorted request received");
+        return jdbcTemplate.query(
+                "SELECT id, name_russian, name_native, year_of_release, rating, price, picture_path " +
+                        "FROM movieland.movie " +
+                        "ORDER BY " + sortedAttribute + " " + sortingType,
+                MOVIE_ROW_MAPPER);
+    }
+
+    @Override
     public List<Movie> getRandoms(int count) {
         log.info("Get {} random movies request received", count);
         // todo will work slowly on a large set of rows;
@@ -49,6 +59,20 @@ public class JdbcMovieDao implements MovieDao {
                         "movieland.movie_genre mg ON " +
                         "m.id = mg.movie_id " +
                         "WHERE mg.genre_id = ?",
+                MOVIE_ROW_MAPPER,
+                genreId);
+    }
+
+    @Override
+    public List<Movie> getMoviesByGenreSorted(int genreId, String sortedAttribute, String sortingType) {
+        log.info("Get movies for genre {} sorted request received", genreId);
+        return jdbcTemplate.query(
+                "SELECT id, name_russian, name_native, year_of_release, rating, price, picture_path " +
+                        "FROM movieland.movie m JOIN " +
+                        "movieland.movie_genre mg ON " +
+                        "m.id = mg.movie_id " +
+                        "WHERE mg.genre_id = ? " +
+                        "ORDER BY " + sortedAttribute + " " + sortingType,
                 MOVIE_ROW_MAPPER,
                 genreId);
     }
