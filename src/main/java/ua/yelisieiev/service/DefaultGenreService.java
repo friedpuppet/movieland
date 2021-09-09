@@ -15,6 +15,11 @@ public class DefaultGenreService implements GenreService {
     private final GenreDao genreDao;
 
     @Override
+    public List<Genre> getListForMovie(int movieId) {
+        return genreDao.getListForMovie(movieId);
+    }
+
+    @Override
     public List<Genre> getAll() {
         log.info("Get all genres request received");
         return genreDao.getAll();

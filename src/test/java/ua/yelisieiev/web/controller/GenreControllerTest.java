@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ua.yelisieiev.common.MockGenresFactory;
 import ua.yelisieiev.entity.Genre;
 import ua.yelisieiev.service.GenreService;
 
@@ -17,6 +16,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ua.yelisieiev.common.MockGenres.*;
 
 class GenreControllerTest {
     private MockMvc mockMvc;
@@ -26,10 +26,10 @@ class GenreControllerTest {
     @BeforeEach
     void setUp() {
         genreService = mock(GenreService.class);
-        allGenres = List.of(MockGenresFactory.getGenre("драма"),
-                MockGenresFactory.getGenre("криминал"),
-                MockGenresFactory.getGenre("фэнтези"),
-                MockGenresFactory.getGenre("детектив"));
+        allGenres = List.of(DRAMA,
+                CRIMINAL,
+                FANTASY,
+                DETECTIVE);
 
         mockMvc = MockMvcBuilders.standaloneSetup(new GenreController(genreService))
                 .build();

@@ -3,39 +3,29 @@ package ua.yelisieiev.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ua.yelisieiev.common.MockGenresFactory;
 import ua.yelisieiev.dao.GenreDao;
 import ua.yelisieiev.entity.Genre;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static ua.yelisieiev.common.MockGenres.*;
 
 class DefaultGenreServiceTest {
     private DefaultGenreService genreService;
     private GenreDao genreDao;
     private List<Genre> allGenres;
-    private Genre drama;
-    private Genre criminal;
-    private Genre fantasy;
-    private Genre detective;
 
     @BeforeEach
     void setUp() {
         genreDao = mock(GenreDao.class);
         genreService = new DefaultGenreService(genreDao);
 
-        drama = MockGenresFactory.getGenre("драма");
-        criminal = MockGenresFactory.getGenre("криминал");
-        fantasy = MockGenresFactory.getGenre("фэнтези");
-        detective = MockGenresFactory.getGenre("детектив");
-
-        allGenres = List.of(drama,
-                criminal,
-                fantasy,
-                detective);
+        allGenres = List.of(DRAMA,
+                CRIMINAL,
+                FANTASY,
+                DETECTIVE);
 
     }
 
@@ -46,13 +36,28 @@ class DefaultGenreServiceTest {
         List<Genre> genreList = genreService.getAll();
 
         assertEquals(4, genreList.size());
-        assertTrue(genreList.contains(drama));
-        assertTrue(genreList.contains(criminal));
-        assertTrue(genreList.contains(detective));
-        assertTrue(genreList.contains(fantasy));
+        assertTrue(genreList.contains(DRAMA));
+        assertTrue(genreList.contains(CRIMINAL));
+        assertTrue(genreList.contains(DETECTIVE));
+        assertTrue(genreList.contains(FANTASY));
 
         verify(genreDao, times(1)).getAll();
         verifyNoMoreInteractions(genreDao);
     }
 
+    @DisplayName("On mocked dao - get genre list for a movie")
+    @Test
+    void test_getListForMovie() {
+        when(genreDao.getListForMovie(1)).thenReturn(List.of(DRAMA, CRIMINAL));
+
+        List<Genre> genres = genreService.getListForMovie(1);
+        assertNotNull(genres);
+        assertEquals(1, genres.get(0).getId());
+        assertEquals("драма", genres.get(0).getName());
+        assertEquals(2, genres.get(1).getId());
+        assertEquals("криминал", genres.get(1).getName());
+
+        verify(genreDao).getListForMovie(1);
+        verifyNoMoreInteractions(genreDao);
+    }
 }

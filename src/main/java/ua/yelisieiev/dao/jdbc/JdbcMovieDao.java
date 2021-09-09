@@ -6,7 +6,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ua.yelisieiev.dao.MovieDao;
+import ua.yelisieiev.dao.jdbc.mapper.MovieFullRowMapper;
+import ua.yelisieiev.dao.jdbc.mapper.MovieRowMapper;
 import ua.yelisieiev.entity.Movie;
+import ua.yelisieiev.entity.MovieFull;
 
 import java.util.List;
 
@@ -14,7 +17,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class JdbcMovieDao implements MovieDao {
-    private static final RowMapper<Movie> MOVIE_ROW_MAPPER = new RowMovieMapper();
+    private static final RowMapper<Movie> MOVIE_ROW_MAPPER = new MovieRowMapper();
+    private static final RowMapper<MovieFull> MOVIE_FULL_ROW_MAPPER = new MovieFullRowMapper();
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -75,5 +79,13 @@ public class JdbcMovieDao implements MovieDao {
                         "ORDER BY " + sortedAttribute + " " + sortingType,
                 MOVIE_ROW_MAPPER,
                 genreId);
+    }
+
+    @Override
+    public MovieFull getSingle(int movieId) {
+        return jdbcTemplate.queryForObject("SELECT id, name_russian, name_native, year_of_release, " +
+                "description, rating, price, picture_path " +
+                "FROM movieland.movie m " +
+                "WHERE m.id = ?", MOVIE_FULL_ROW_MAPPER, movieId);
     }
 }

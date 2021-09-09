@@ -5,5 +5,7 @@ import ua.yelisieiev.entity.Genre;
 import java.util.List;
 
 public interface GenreService {
+    List<Genre> getListForMovie(int movieId);
+
     List<Genre> getAll();
 }
