@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ua.yelisieiev.common.MockMoviesFactory;
 import ua.yelisieiev.entity.Movie;
 import ua.yelisieiev.service.MovieService;
 
@@ -20,16 +19,11 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ua.yelisieiev.common.MockMovies.*;
 
 class MovieControllerTest {
 
     private MockMvc mockMvc;
-    private final Movie shawshankRedemption = MockMoviesFactory.getshawshankRedemption();
-    private final Movie greenMile = MockMoviesFactory.getGreenMile();
-    private final Movie forrestGump = MockMoviesFactory.getForrestGump();
-    private final Movie inception = MockMoviesFactory.getInception();
-    private final Movie snatch = MockMoviesFactory.getSnatch();
-
     private MovieService movieService;
 
     @BeforeEach
@@ -43,7 +37,7 @@ class MovieControllerTest {
     @DisplayName("With test data - request all movies - get the list")
     @Test
     void test_getAllMovies() throws Exception {
-        List<Movie> movies = List.of(shawshankRedemption, greenMile);
+        List<Movie> movies = List.of(SHAWSHANK_REDEMPTION, GREEN_MILE);
         when(movieService.getAll()).thenReturn(movies);
 
         mockMvc.perform(get("/movie")
@@ -68,7 +62,7 @@ class MovieControllerTest {
     @DisplayName("With test data - request all movies sorted by rating desc - get the list")
     @Test
     void test_getAllMoviesSortedByRatingDesc() throws Exception {
-        List<Movie> movies = List.of(shawshankRedemption, greenMile, forrestGump, inception);
+        List<Movie> movies = List.of(SHAWSHANK_REDEMPTION, GREEN_MILE, FORREST_GUMP, INCEPTION);
         when(movieService.getAllSorted(anyString(), anyString())).thenReturn(movies);
 
         mockMvc.perform(get("/movie?rating=desc")
@@ -88,7 +82,7 @@ class MovieControllerTest {
     @DisplayName("With test data - request all movies sorted by price desc - get the list")
     @Test
     void test_getAllMoviesSortedByPriceDesc() throws Exception {
-        List<Movie> movies = List.of(forrestGump, greenMile, inception, shawshankRedemption);
+        List<Movie> movies = List.of(FORREST_GUMP, GREEN_MILE, INCEPTION, SHAWSHANK_REDEMPTION);
         when(movieService.getAllSorted(anyString(), anyString())).thenReturn(movies);
 
         mockMvc.perform(get("/movie?price=desc")
@@ -108,7 +102,7 @@ class MovieControllerTest {
     @DisplayName("With test data - request all movies sorted by price asc - get the list")
     @Test
     void test_getAllMoviesSortedByPriceAsc() throws Exception {
-        List<Movie> movies = List.of(shawshankRedemption, inception, greenMile, forrestGump);
+        List<Movie> movies = List.of(SHAWSHANK_REDEMPTION, INCEPTION, GREEN_MILE, FORREST_GUMP);
         when(movieService.getAllSorted(anyString(), anyString())).thenReturn(movies);
 
         mockMvc.perform(get("/movie?price=asc")
@@ -128,7 +122,7 @@ class MovieControllerTest {
     @DisplayName("With test data - request three random movies - get the list")
     @Test
     void test_getThreeRandomMovies() throws Exception {
-        List<Movie> movies = new ArrayList<>(List.of(shawshankRedemption, greenMile, forrestGump, inception));
+        List<Movie> movies = new ArrayList<>(List.of(SHAWSHANK_REDEMPTION, GREEN_MILE, FORREST_GUMP, INCEPTION));
         movies.remove(new Random(System.nanoTime()).nextInt(3));
         when(movieService.getRandomMovies(3)).thenReturn(movies);
 
@@ -147,7 +141,7 @@ class MovieControllerTest {
     @DisplayName("With mocked service - request movies for a particular genre - get the list")
     @Test
     void test_getMoviesByGenre() throws Exception {
-        List<Movie> movies = new ArrayList<>(List.of(shawshankRedemption, greenMile, snatch));
+        List<Movie> movies = new ArrayList<>(List.of(SHAWSHANK_REDEMPTION, GREEN_MILE, SNATCH));
         when(movieService.getMoviesByGenre(2)).thenReturn(movies);
 
         mockMvc.perform(get("/movie/genre/2")
@@ -166,7 +160,7 @@ class MovieControllerTest {
     @DisplayName("With mocked service - request movies for a particular genre sorted by rating desc - get the list")
     @Test
     void test_getMoviesByGenreSortedByRatingDesc() throws Exception {
-        List<Movie> movies = new ArrayList<>(List.of(shawshankRedemption, greenMile, snatch));
+        List<Movie> movies = new ArrayList<>(List.of(SHAWSHANK_REDEMPTION, GREEN_MILE, SNATCH));
         when(movieService.getMoviesByGenreSorted(eq(2), anyString(), anyString())).thenReturn(movies);
 
         mockMvc.perform(get("/movie/genre/2?rating=desc")
@@ -185,7 +179,7 @@ class MovieControllerTest {
     @DisplayName("With mocked service - request movies for a particular genre sorted by price desc - get the list")
     @Test
     void test_getMoviesByGenreSortedByPriceDesc() throws Exception {
-        List<Movie> movies = new ArrayList<>(List.of(snatch, greenMile, shawshankRedemption));
+        List<Movie> movies = new ArrayList<>(List.of(SNATCH, GREEN_MILE, SHAWSHANK_REDEMPTION));
         when(movieService.getMoviesByGenreSorted(eq(2), anyString(), anyString())).thenReturn(movies);
 
         mockMvc.perform(get("/movie/genre/2?price=desc")
@@ -204,7 +198,7 @@ class MovieControllerTest {
     @DisplayName("With mocked service - request movies for a particular genre sorted by price asc - get the list")
     @Test
     void test_getMoviesByGenreSortedByPriceAsc() throws Exception {
-        List<Movie> movies = new ArrayList<>(List.of(shawshankRedemption, greenMile, snatch));
+        List<Movie> movies = new ArrayList<>(List.of(SHAWSHANK_REDEMPTION, GREEN_MILE, SNATCH));
         when(movieService.getMoviesByGenreSorted(eq(2), anyString(), anyString())).thenReturn(movies);
 
         mockMvc.perform(get("/movie/genre/2?price=asc")
@@ -217,6 +211,44 @@ class MovieControllerTest {
                 .andExpect(jsonPath("$[2].id").value(16));
 
         verify(movieService, times(1)).getMoviesByGenreSorted(eq(2), anyString(), anyString());
+        verifyNoMoreInteractions(movieService);
+    }
+
+    @DisplayName("With test data - request single movie - get full data")
+    @Test
+    void test_getSingleMovie() throws Exception {
+        when(movieService.getSingle(1)).thenReturn(SHAWSHANK_REDEMPTION_FULL);
+
+        mockMvc.perform(get("/movie/1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.nameNative").value("The Shawshank Redemption"))
+                .andExpect(jsonPath("$.nameRussian").value("Побег из Шоушенка"))
+                .andExpect(jsonPath("$.yearOfRelease").value(1994))
+                .andExpect(jsonPath("$.description", notNullValue()))
+                .andExpect(jsonPath("$.price").value(123.45))
+                .andExpect(jsonPath("$.rating").value(8.9))
+                .andExpect(jsonPath("$.picturePath").value("https://images-na.ssl-images-amazon.com/images/M/MV5BODU4MjU4NjIwNl5BMl5BanBnXkFtZTgwMDU2MjEyMDE@._V1._SY209_CR0,0,140,209_.jpg"))
+
+                .andExpect(jsonPath("$.countries", hasSize(1)))
+                .andExpect(jsonPath("$.countries[0].id").value(1))
+                .andExpect(jsonPath("$.countries[0].name").value("США"))
+
+                .andExpect(jsonPath("$.genres", hasSize(2)))
+                .andExpect(jsonPath("$.genres[0].id").value(1))
+                .andExpect(jsonPath("$.genres[0].name").value("драма"))
+                .andExpect(jsonPath("$.genres[1].id").value(2))
+                .andExpect(jsonPath("$.genres[1].name").value("криминал"))
+
+                .andExpect(jsonPath("$.reviews", hasSize(2)))
+                .andExpect(jsonPath("$.reviews[0].id").value(1))
+                .andExpect(jsonPath("$.reviews[0].user.id").value(3))
+                .andExpect(jsonPath("$.reviews[1].id").value(2))
+                .andExpect(jsonPath("$.reviews[1].user.id").value(4));
+
+        verify(movieService, times(1)).getSingle(1);
         verifyNoMoreInteractions(movieService);
     }
 }

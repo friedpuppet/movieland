@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ua.yelisieiev.entity.Movie;
+import ua.yelisieiev.entity.MovieFull;
 import ua.yelisieiev.service.MovieService;
 
 import java.util.List;
@@ -58,5 +59,12 @@ public class MovieController {
         log.info("Get movies by genre sorted by price request received");
         return movieService.getMoviesByGenreSorted(genreId, "price", price);
     }
+
+    @GetMapping(value = "/{movieId}")
+    public MovieFull getmovie(@PathVariable int movieId) {
+        log.info("Get movies by genre sorted by price request received");
+        return movieService.getSingle(movieId);
+    }
+
 }
 

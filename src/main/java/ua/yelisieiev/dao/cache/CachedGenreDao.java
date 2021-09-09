@@ -29,4 +29,9 @@ public class CachedGenreDao implements GenreDao {
         }
         return cache;
     }
+
+    @Override
+    public List<Genre> getListForMovie(int movieId) {
+        return targetDao.getListForMovie(movieId);
+    }
 }
