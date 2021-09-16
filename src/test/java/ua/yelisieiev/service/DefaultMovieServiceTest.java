@@ -184,4 +184,79 @@ class DefaultMovieServiceTest {
         assertEquals(2, movieFull.getReviews().get(1).getId());
         assertEquals(4, movieFull.getReviews().get(1).getUser().getId());
     }
+
+    @DisplayName("On mocked dao and other services - get timeout on countries - get single movie with empty countries")
+    @Test
+    void test_getSingleMovieCountriesTimeout() {
+        when(movieDao.getSingle(1)).thenReturn(getShawshankRedemptionFullNotEnriched());
+        when(countryService.getListForMovie(1)).then(invocation -> {
+            Thread.sleep(6000);
+            return List.of(USA);
+        });
+        when(genreService.getListForMovie(1)).thenReturn(List.of(DRAMA, CRIMINAL));
+        when(reviewService.getListForMovie(1)).thenReturn(List.of(SHAWSHANK_REVIEW_1_FULL, SHAWSHANK_REVIEW_2_FULL));
+
+        MovieFull movieFull = movieService.getSingle(1);
+        assertNotNull(movieFull);
+        assertEquals(1, movieFull.getId());
+        assertEquals("The Shawshank Redemption", movieFull.getNameNative());
+        assertEquals("Побег из Шоушенка", movieFull.getNameRussian());
+        assertEquals(LocalDate.of(1994, 1, 1), movieFull.getYearOfRelease());
+        assertNotNull(movieFull.getDescription());
+        assertEquals(123.45, movieFull.getPrice());
+        assertEquals(8.9, movieFull.getRating());
+        assertEquals("https://images-na.ssl-images-amazon.com/images/M/MV5BODU4MjU4NjIwNl5BMl5BanBnXkFtZTgwMDU2MjEyMDE@._V1._SY209_CR0,0,140,209_.jpg",
+                movieFull.getPicturePath());
+
+        assertNull(movieFull.getCountries());
+
+        assertEquals(2, movieFull.getGenres().size());
+        assertEquals(1, movieFull.getGenres().get(0).getId());
+        assertEquals("драма", movieFull.getGenres().get(0).getName());
+        assertEquals(2, movieFull.getGenres().get(1).getId());
+        assertEquals("криминал", movieFull.getGenres().get(1).getName());
+
+        assertEquals(2, movieFull.getReviews().size());
+        assertEquals(1, movieFull.getReviews().get(0).getId());
+        assertEquals(3, movieFull.getReviews().get(0).getUser().getId());
+        assertEquals(2, movieFull.getReviews().get(1).getId());
+        assertEquals(4, movieFull.getReviews().get(1).getUser().getId());
+    }
+
+    @DisplayName("On mocked dao and other services - get timeout on all subservices - get single movie with empty countries, genres, reviews")
+    @Test
+    void test_getSingleMovieAllTimeout() {
+        when(movieDao.getSingle(1)).thenReturn(getShawshankRedemptionFullNotEnriched());
+        when(countryService.getListForMovie(1))
+                .then(invocation -> {
+                    Thread.sleep(6000);
+                    return List.of(USA);
+                });
+        when(genreService.getListForMovie(1))
+                .then(invocation -> {
+                    Thread.sleep(6000);
+                    return List.of(DRAMA, CRIMINAL);
+                });
+        when(reviewService.getListForMovie(1))
+                .then(invocation -> {
+                    Thread.sleep(6000);
+                    return List.of(SHAWSHANK_REVIEW_1_FULL, SHAWSHANK_REVIEW_2_FULL);
+                });
+
+        MovieFull movieFull = movieService.getSingle(1);
+        assertNotNull(movieFull);
+        assertEquals(1, movieFull.getId());
+        assertEquals("The Shawshank Redemption", movieFull.getNameNative());
+        assertEquals("Побег из Шоушенка", movieFull.getNameRussian());
+        assertEquals(LocalDate.of(1994, 1, 1), movieFull.getYearOfRelease());
+        assertNotNull(movieFull.getDescription());
+        assertEquals(123.45, movieFull.getPrice());
+        assertEquals(8.9, movieFull.getRating());
+        assertEquals("https://images-na.ssl-images-amazon.com/images/M/MV5BODU4MjU4NjIwNl5BMl5BanBnXkFtZTgwMDU2MjEyMDE@._V1._SY209_CR0,0,140,209_.jpg",
+                movieFull.getPicturePath());
+
+        assertNull(movieFull.getCountries());
+        assertNull(movieFull.getGenres());
+        assertNull(movieFull.getReviews());
+    }
 }
